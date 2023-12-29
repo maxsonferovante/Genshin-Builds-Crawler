@@ -1,16 +1,13 @@
-# This is a sample Python script.
-
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+from GenshinBuildsCrawler.genshinBuildsCrawler import GenBuildsCrawler
 
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+def run():
+    url = 'https://genshin-builds.com/pt'
+    crawler = GenBuildsCrawler(url)
+    crawler.download_url()
+    crawler.get_information_response_html()
+    print(crawler.dictWeapon.keys())
 
 
-# Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    print_hi('PyCharm')
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    run()
