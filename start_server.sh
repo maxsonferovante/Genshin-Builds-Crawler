@@ -10,4 +10,4 @@ python3 -m venv venv
 pip install -r requirements.txt
 
 # Iniciar o servidor usando PM2 com o nome "Genshin Builder Crawler API"
-pm2 start --name "Genshin Builder Crawler API" -- "uvicorn src.app_module:http_server" --host "0.0.0.0" --port "8000"
+pm2 start --name "Genshin Builder Crawler API" "uvicorn 'src.app_module:http_server' --host '0.0.0.0' --port '8000'"
