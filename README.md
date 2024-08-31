@@ -1,4 +1,4 @@
-# PyNest service
+# Genshin Builder Crawler API
 
 Este projeto consiste em uma API, desenvolvido em Python, que realiza web crawling para obter informações sobre armas disponíveis para farmar no jogo Genshin Impact.
 
