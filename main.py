@@ -6,7 +6,8 @@ def run():
     crawler = GenBuildsCrawler(url)
     crawler.download_url()
     crawler.get_information_response_html()
-    print(crawler.dictWeapon.keys())
+    crawler.dictCharacter
+    print(crawler.dictCharacter.keys())
 
 
 if __name__ == '__main__':

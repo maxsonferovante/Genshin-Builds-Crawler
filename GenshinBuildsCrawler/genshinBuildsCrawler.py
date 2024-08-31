@@ -13,6 +13,7 @@ class GenBuildsCrawler:
     def __init__(self, url):
         self.url = self.validate_url(url)
         self.dictWeapon = {}
+        self.dictCharacter = {}
 
         self.__responseHTML = None
         self.__objectHTML = None
@@ -34,6 +35,7 @@ class GenBuildsCrawler:
 
         self.get_dict_dungeon()
         self.get_dict_weapon()
+        self.get_dict_character()
 
     def get_dict_dungeon(self):
         logging.info(f'Get Dungeon in object bs4.')
@@ -60,17 +62,46 @@ class GenBuildsCrawler:
 
         logging.info(f'Get Weapon in object bs4 success.')
 
+    def get_dict_character(self):
+        logging.info(f'Get Character in object bs4.')
+        
+        weapon = self.__objectHTML.find_all('tr', class_='border-b border-gray-700 pt-2 align-middle')
+        
+        for td_item in self.__objectHTML.find_all('tr'):
+            # o td_item não pode estar no array weapon
+            if td_item in weapon:
+                continue
+            child_td_item = td_item.find_all('td')
+
+            if len(child_td_item) == 2:
+                key = child_td_item[0].find('h3', class_='text-lg text-gray-200').get_text()
+                for value in child_td_item[1].find_all('a'):
+                    
+                    self.dictCharacter[key] = {
+                        'name': value['href'].replace('/pt/character/', '').replace('_', ' ').title(),
+                        'url': urljoin(self.url, value.get('href')),
+                        'img': self.get_img_character(value['href'])
+                    }
+        logging.info(f'Get Character in object bs4 success.')
     @staticmethod
     def get_img_weapon(path):
         # pt/weapon/harbinger_of_dawn
         # https://i2.wp.com/genshinbuilds.aipurrjects.com/genshin/weapons/harbinger_of_dawn.png?strip=all&quality=100&w=80
         logging.info(f'Get Img Weapon in object bs4.')
 
-        path_in_page = 'https://i2.wp.com/genshinbuilds.aipurrjects.com/genshin/weapons/' + path.replace('pt/weapon/',
+        path_in_page = 'https://i2.wp.com/genshinbuilds.aipurrjects.com/genshin/weapons/' +  path.replace('pt/weapon/',
                                                                                                          '') + '.png?strip=all&quality=100&w=80'
         logging.info(f'Get Img Weapon in object bs4 success.')
         return path_in_page
 
+    @staticmethod
+    def get_img_character(path):
+        # pt/character/amber
+        # https://i2.wp.com/genshinbuilds.aipurrjects.com/genshin/characters/raiden_shogun/image.png?strip=all&quality=100&w=80
+    
+        path_in_page = 'https://i2.wp.com/genshinbuilds.aipurrjects.com/genshin/characters/' + path.split('/')[-1] + '/image.png?strip=all&quality=100&w=80'
+        return path_in_page     
+        
     @staticmethod
     def validate_url(url):
         if url is None:
