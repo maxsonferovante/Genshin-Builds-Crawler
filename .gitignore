@@ -1,3 +1,7 @@
 .venv
 __init__.*
-*.pyc
+*.
+.env
+__pycache__
+
+launche.json
