@@ -11,11 +11,11 @@ class CrawlerController:
     
     @Get("/weapons")
     def get_crawler_weapons(self):
-        return self.crawler_service.run(EnumCrawler.WEAPON)
+        return self.crawler_service.get_weapon(EnumCrawler.WEAPON)
     
     @Get("/characters")
     def get_crawler_characters(self):
-        return self.crawler_service.run(EnumCrawler.CHARACTER)
+        return self.crawler_service.get_character(EnumCrawler.CHARACTER)
         
     
 
