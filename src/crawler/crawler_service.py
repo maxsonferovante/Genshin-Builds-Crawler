@@ -74,6 +74,37 @@ class CrawlerService:
         
         return objectResponse
 
+
+    def get_dungeon(self):
+        self.__download_url()
+        self.__get_information_response_html()
+        
+        objectResponse = CrawlerResponse()
+        objectResponse.option = EnumCrawler.DUNGEON
+        objectResponse.data['Weapons'] = []
+        objectResponse.data['Characters'] = []
+        
+        
+        weapon = self.__objectHTML.find_all('tr', class_='border-b border-gray-700 pt-2 align-middle')        
+        
+        for tr_item in self.__objectHTML.find_all('tr'):
+            
+            child_td_item = tr_item.find_all('td')
+            quantity = len(child_td_item[1].find_all('a')) if  len(child_td_item) >=2 else 0 
+            
+            if tr_item in weapon:                
+                objectResponse.data['Weapons'].append({
+                    'name': tr_item.td.h3.text,
+                    'quantity': quantity
+                })        
+            else:
+                objectResponse.data['Characters'].append({
+                    'name': tr_item.td.h3.text,
+                    'quantity': quantity
+                })
+        
+        return objectResponse
+            
     def __download_url(self):
         try:
             if self.__available_update():
@@ -111,11 +142,6 @@ class CrawlerService:
         self.__last_datetime_updated = datetime.now()
         print (f'Last update: {self.__last_datetime_updated}')
     
-    def __get_dict_dungeon(self):
-
-        for tr_item in self.__objectHTML.find_all('tr', class_='border-b border-gray-700 pt-2 align-middle'):
-            self.dictWeapon[tr_item.td.h3.text] = []
-   
     def __get_img_weapon(self,path):
         # pt/weapon/harbinger_of_dawn
         # https://i2.wp.com/genshinbuilds.aipurrjects.com/genshin/weapons/harbinger_of_dawn.png?strip=all&quality=100&w=80

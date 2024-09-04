@@ -17,5 +17,6 @@ class CrawlerController:
     def get_crawler_characters(self):
         return self.crawler_service.get_character(EnumCrawler.CHARACTER)
         
-    
-
+    @Get("/dungeons")
+    def get_crawler_dungeons(self):
+        return self.crawler_service.get_dungeon()
