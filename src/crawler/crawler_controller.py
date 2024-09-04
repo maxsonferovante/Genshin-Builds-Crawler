@@ -20,3 +20,7 @@ class CrawlerController:
     @Get("/dungeons")
     def get_crawler_dungeons(self):
         return self.crawler_service.get_dungeon()
+    
+    @Get("/teams")
+    def get_crawler_teams(self):
+        return self.crawler_service.get_teams()
