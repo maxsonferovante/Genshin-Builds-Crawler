@@ -42,7 +42,13 @@ class MemberTeam(BaseModel):
     url: str
     img: str
 
-class TeamsResponse(BaseModel):
+class Team(BaseModel):
     date_formed: datetime = Field(init=False, default_factory=datetime.now)
-    bestTeamForCharacter: str
+    bestTeamForCharacter: Optional[str]
     members: Optional[List[MemberTeam]] = []
+
+class TeamsResponse(BaseModel):
+    created_at: datetime = Field(init=False, default_factory=datetime.now)
+    quantity_teams: Optional[int] = 0
+    data: Optional[List[Team]] = []
+    
