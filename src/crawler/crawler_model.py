@@ -14,13 +14,28 @@ class Item(BaseModel):
     url: Optional[str]
     img: Optional[str]
 
-
-class CrawlerResponse(BaseModel):    
+class ItemDungeon(BaseModel):
+    name: Optional[str]
+    quantity: Optional[int]
+    
+class WeaponsResponse(BaseModel):    
     created_at: datetime = Field(init=False, default_factory=datetime.now)
     location: str = Field(init=False,default='Brazil')
     option: Optional[EnumCrawler]
     data: Optional[Dict[str, List[Item]]] = {}
-    
+
+class CharacterResponse(BaseModel):    
+    created_at: datetime = Field(init=False, default_factory=datetime.now)
+    location: str = Field(init=False,default='Brazil')
+    option: Optional[EnumCrawler]
+    data: Optional[Dict[str, List[Item]]] = {}
+
+class DungeonsResponse(BaseModel):    
+    created_at: datetime = Field(init=False, default_factory=datetime.now)
+    location: str = Field(init=False,default='Brazil')
+    option: Optional[EnumCrawler]
+    data: Optional[Dict[str, List[ItemDungeon]]] = {}
+
 class MemberTeam(BaseModel):
     name: str
     position: str
