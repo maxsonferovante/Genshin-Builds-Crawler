@@ -1,6 +1,6 @@
 from nest.core import Injectable
 from src.config import configs
-from .crawler_model import EnumCrawler, CrawlerResponse, Item
+from .crawler_model import EnumCrawler, Item, MemberTeam, TeamsResponse, WeaponsResponse, CharacterResponse, DungeonsResponse
 
 from datetime import datetime
 from urllib.parse import urljoin
@@ -21,12 +21,12 @@ class CrawlerService:
         self.__last_datetime_updated = None
     
     
-    def get_weapon(self,option: EnumCrawler) -> CrawlerResponse:
+    def get_weapon(self,option: EnumCrawler) -> WeaponsResponse:
         
         self.__download_url()
         self.__get_information_response_html()
         
-        objectResponse = CrawlerResponse()
+        objectResponse = WeaponsResponse()
         
         objectResponse.option = option
         
@@ -46,12 +46,12 @@ class CrawlerService:
 
         return objectResponse
     
-    def get_character(self, option: EnumCrawler) -> CrawlerResponse:
+    def get_character(self, option: EnumCrawler) -> CharacterResponse:
         
         self.__download_url()
         self.__get_information_response_html()
         
-        objectResponse = CrawlerResponse()
+        objectResponse = CharacterResponse()
         
         objectResponse.option = option
         
@@ -74,12 +74,11 @@ class CrawlerService:
         
         return objectResponse
 
-
-    def get_dungeon(self):
+    def get_dungeon(self) -> DungeonsResponse:
         self.__download_url()
         self.__get_information_response_html()
         
-        objectResponse = CrawlerResponse()
+        objectResponse = DungeonsResponse()
         objectResponse.option = EnumCrawler.DUNGEON
         objectResponse.data['Weapons'] = []
         objectResponse.data['Characters'] = []
@@ -104,11 +103,17 @@ class CrawlerService:
                 })
         
         return objectResponse
-            
-    def __download_url(self):
+    
+    def get_teams(self):
+        self.__download_url(self.url_base + '/teams')
+        self.__get_information_response_html()
+        return []        
+    
+    def __download_url(self, url = None):
         try:
             if self.__available_update():
-                self.__responseHTML = requests.get(self.url_base, timeout=30).text  
+                url_final = url if url is not None else self.url_base
+                self.__responseHTML = requests.get(url_final, timeout=30).text  
                 self.__updated_last_datetime()
             else:
                 print('No update available')
