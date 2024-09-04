@@ -1,6 +1,6 @@
 from nest.core import Injectable
 from src.config import configs
-from .crawler_model import EnumCrawler, Item, MemberTeam, TeamsResponse, WeaponsResponse, CharacterResponse, DungeonsResponse
+from .crawler_model import EnumCrawler, Item, MemberTeam, TeamsResponse, WeaponsResponse, CharacterResponse, DungeonsResponse, Team, ItemDungeon
 
 from datetime import datetime
 from urllib.parse import urljoin
@@ -104,10 +104,46 @@ class CrawlerService:
         
         return objectResponse
     
-    def get_teams(self):
-        self.__download_url(self.url_base + '/teams')
+    def get_teams(self) -> TeamsResponse:
+        url_teams = self.url_base + '/teams'
+        self.__download_url(url_teams)
         self.__get_information_response_html()
-        return []        
+        
+        teams_div = self.__objectHTML.find_all('div', class_='grid gap-4 lg:grid-cols-2')
+        print (teams_div.__len__())
+        if teams_div.__len__() == 0 :
+            return TeamsResponse()
+        
+        teams_div_list = teams_div[0].find_all('div', class_='card mx-2 md:mx-0')
+        print (teams_div_list.__len__())
+        if teams_div_list.__len__() == 0:
+            return TeamsResponse()
+        
+        objectResponse = TeamsResponse()
+        
+        for team in teams_div_list:
+            teamResponse = Team()
+            teamResponse.bestTeamForCharacter = team.find('h3', ).get_text().split(' ')[-1]
+            
+            members_div_list = team.find('div', class_='grid grid-cols-4 gap-2')            
+    
+            for member_div in members_div_list.children:
+                
+                position = member_div.find('div', class_='md:min-h-auto min-h-10 text-center text-xs lg:text-sm').get_text()
+                
+                url = url_teams + member_div.find('div', class_='flex justify-center text-center').find('a').get('href').replace('/pt/teams','')
+                
+                name = member_div.find('div', class_='flex justify-center text-center').find('a').find('span').get_text()
+                
+                img = member_div.find('div', class_='flex justify-center text-center').find('a').find('div', class_="group relative overflow-hidden rounded-full border-4 border-transparent transition hover:border-vulcan-500").find('img').get('src')
+
+                teamResponse.members.append(MemberTeam(name=name, position=position, url=url, img=img))
+            
+            objectResponse.data.append(teamResponse)
+        
+        objectResponse.quantity_teams = objectResponse.data.__len__()
+        
+        return objectResponse
     
     def __download_url(self, url = None):
         try:
