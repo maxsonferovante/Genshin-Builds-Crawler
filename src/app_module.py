@@ -16,7 +16,7 @@ app = PyNestFactory.create(
     AppModule,
     description="Este projeto consiste em uma API, desenvolvido em Python, que realiza web crawling para obter informações sobre armas disponíveis para farmar no jogo Genshin Impact",
     title="Genshin Builder Crawler API",
-    version="0.0.3",
+    version="0.0.4",
     debug=True,
     docs_url="/api/docs",
 )
