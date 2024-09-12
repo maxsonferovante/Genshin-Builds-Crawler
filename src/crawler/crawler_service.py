@@ -18,7 +18,6 @@ class CrawlerService:
         self.__responseHTML = None
         self.__objectHTML = None
         
-        self.__last_datetime_updated = None
     
     
     def get_weapon(self,option: EnumCrawler) -> WeaponsResponse:
@@ -105,17 +104,18 @@ class CrawlerService:
         return objectResponse
     
     def get_teams(self) -> TeamsResponse:
+        
         url_teams = self.url_base + '/teams'
+        
         self.__download_url(url_teams)
+        
         self.__get_information_response_html()
         
         teams_div = self.__objectHTML.find_all('div', class_='grid gap-4 lg:grid-cols-2')
-        print (teams_div.__len__())
         if teams_div.__len__() == 0 :
             return TeamsResponse()
         
         teams_div_list = teams_div[0].find_all('div', class_='card mx-2 md:mx-0')
-        print (teams_div_list.__len__())
         if teams_div_list.__len__() == 0:
             return TeamsResponse()
         
@@ -147,41 +147,15 @@ class CrawlerService:
     
     def __download_url(self, url = None):
         try:
-            if self.__available_update():
-                url_final = url if url is not None else self.url_base
-                self.__responseHTML = requests.get(url_final, timeout=30).text  
-                self.__updated_last_datetime()
-            else:
-                print('No update available')
-                
-                                     
+
+            url_final = url if url is not None else self.url_base
+            self.__responseHTML = requests.get(url_final, timeout=30).text  
         except requests.RequestException as e:
             print(f'Error: {e}')
             raise e
 
     def __get_information_response_html(self):
         self.__objectHTML = BeautifulSoup(self.__responseHTML, 'html.parser')
-
-    def __available_update(self):
-        
-        if self.__last_datetime_updated is None:
-            return True
-        
-        datetime_now = datetime.now()
-        difference = (datetime.now() - self.__last_datetime_updated).seconds
-        
-        print (f'Datetime now: {datetime_now} - Last update: {self.__last_datetime_updated} - Difference: {difference}')
-    
-        
-        if difference > 60:
-            print('Update available')
-            return True
-        print ('Update not available')
-        return False
-    
-    def __updated_last_datetime(self):
-        self.__last_datetime_updated = datetime.now()
-        print (f'Last update: {self.__last_datetime_updated}')
     
     def __get_img_weapon(self,path):
         # pt/weapon/harbinger_of_dawn
