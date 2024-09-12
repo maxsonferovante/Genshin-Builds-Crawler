@@ -22,7 +22,7 @@ class CrawlerService:
     
     def get_weapon(self,option: EnumCrawler) -> WeaponsResponse:
         
-        self.__download_url()
+        self.__download_url(self.url_base)
         self.__get_information_response_html()
         
         objectResponse = WeaponsResponse()
@@ -47,7 +47,7 @@ class CrawlerService:
     
     def get_character(self, option: EnumCrawler) -> CharacterResponse:
         
-        self.__download_url()
+        self.__download_url(self.url_base)
         self.__get_information_response_html()
         
         objectResponse = CharacterResponse()
@@ -74,7 +74,7 @@ class CrawlerService:
         return objectResponse
 
     def get_dungeon(self) -> DungeonsResponse:
-        self.__download_url()
+        self.__download_url(self.url_base)
         self.__get_information_response_html()
         
         objectResponse = DungeonsResponse()
@@ -147,9 +147,7 @@ class CrawlerService:
     
     def __download_url(self, url = None):
         try:
-
-            url_final = url if url is not None else self.url_base
-            self.__responseHTML = requests.get(url_final, timeout=30).text  
+            self.__responseHTML = requests.get(url, timeout=30).text  
         except requests.RequestException as e:
             print(f'Error: {e}')
             raise e
